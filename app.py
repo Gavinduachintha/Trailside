@@ -133,7 +133,9 @@ def render_top_bar() -> bool:
     )
 
     with st.container(key="top_bar"):
-        left_col, gh_col, btn_col = st.columns([6, 2, 2])
+        left_col, gh_col, btn_col = st.columns(
+            [6, 2, 2], vertical_alignment="center"
+        )
 
         with left_col:
             st.markdown(
@@ -363,14 +365,32 @@ CSS = f"""
 @keyframes sheen{{from{{background-position:0% 50%;}}to{{background-position:100% 50%;}}}}
 .hero .lede{{max-width:44ch;font-size:1.12rem;line-height:1.55;color:var(--bark);margin:0;}}
 
-/* ── Tabs ── */
+/* ── Tabs (Streamlit React Aria stTab — not BaseWeb) ── */
+[data-testid="stTabs"] [role="tablist"]{{
+  gap:.35rem;border-bottom:1px solid var(--line);
+}}
+[data-testid="stTab"]{{
+  color:var(--bark) !important;background:transparent !important;
+}}
+[data-testid="stTab"] p,
+[data-testid="stTab"] [data-testid="stMarkdownContainer"] p{{
+  color:inherit !important;font-weight:600 !important;
+}}
+[data-testid="stTab"][aria-selected="true"],
+[data-testid="stTab"][data-selected="true"]{{
+  color:var(--forest) !important;
+}}
+[data-testid="stTab"]:hover{{color:var(--rust) !important;}}
+[data-testid="stTab"]:focus-visible{{outline:2px solid var(--moss);outline-offset:2px;}}
+[data-testid="stTab"] .react-aria-SelectionIndicator{{
+  background:var(--pumpkin) !important;
+}}
+/* legacy Baseweb selectors (older Streamlit) */
 [data-baseweb="tab-list"]{{gap:.25rem;border-bottom:1px solid var(--line);}}
 button[data-baseweb="tab"]{{background:transparent;color:var(--bark);}}
 button[data-baseweb="tab"] p{{color:inherit;font-weight:500;}}
 button[data-baseweb="tab"][aria-selected="true"]{{color:var(--forest);}}
-button[data-baseweb="tab"]:focus-visible{{outline:2px solid var(--moss);outline-offset:2px;}}
 [data-baseweb="tab-highlight"]{{background:var(--pumpkin) !important;}}
-[data-baseweb="tab-border"]{{background:transparent !important;}}
 
 /* ── Inputs ── */
 [data-testid="stWidgetLabel"] p{{color:var(--bark);}}
@@ -585,7 +605,7 @@ div[role="dialog"]{{
 .st-key-top_bar{{
   position:sticky;top:.75rem;z-index:50;
   margin:0 0 2rem !important;
-  padding:.5rem .55rem .5rem 1.2rem !important;
+  padding:.5rem .65rem .5rem 1.2rem !important;
   background:rgba(255,250,235,.78);
   -webkit-backdrop-filter:blur(14px) saturate(1.15);
   backdrop-filter:blur(14px) saturate(1.15);
@@ -596,14 +616,30 @@ div[role="dialog"]{{
 /* keep one row at every width, content-sized right side */
 .st-key-top_bar [data-testid="stHorizontalBlock"]{{
   flex-direction:row !important;flex-wrap:nowrap !important;
-  align-items:center !important;gap:.6rem !important;
+  align-items:center !important;gap:.55rem !important;
+  min-height:2.5rem;
 }}
-.st-key-top_bar [data-testid="stColumn"]{{position:static !important;min-width:0;}}
+.st-key-top_bar [data-testid="stColumn"]{{
+  position:static !important;min-width:0;
+  display:flex !important;align-items:center !important;
+}}
 .st-key-top_bar [data-testid="stColumn"]:first-child{{flex:1 1 auto !important;width:auto !important;}}
 .st-key-top_bar [data-testid="stColumn"]:not(:first-child){{flex:0 0 auto !important;width:auto !important;}}
+/* Streamlit markdown uses margin-bottom:-1rem; that collapses column height and
+   drops brand/GitHub ~8px below the CTA — neutralize it inside the bar */
+.st-key-top_bar [data-testid="stVerticalBlock"]{{gap:0 !important;}}
+.st-key-top_bar [data-testid="stElementContainer"],
+.st-key-top_bar [data-testid="stMarkdown"],
+.st-key-top_bar [data-testid="stMarkdownContainer"],
+.st-key-top_bar [data-testid="stButton"]{{
+  margin:0 !important;width:100%;
+}}
+.st-key-top_bar [data-testid="stMarkdownContainer"] > *{{margin:0 !important;}}
 
-/* brand */
-.site-header{{margin:0;padding:0;}}
+/* brand — match CTA height so flex centering is true */
+.site-header{{
+  display:flex;align-items:center;margin:0;padding:0;min-height:2.5rem;
+}}
 .sh-identity{{display:flex;align-items:center;gap:.65rem;min-width:0;}}
 .sh-logo{{
   position:relative;flex:0 0 auto;width:1.8rem;height:1.8rem;
@@ -621,16 +657,16 @@ div[role="dialog"]{{
 }}
 .sh-divider{{flex:0 0 auto;width:1px;height:1.1rem;background:var(--line);}}
 .sh-tagline{{
-  font-family:var(--serif);font-style:italic;font-size:.9rem;
+  font-family:var(--serif);font-style:italic;font-size:.9rem;line-height:1;
   color:var(--bark);opacity:.8;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }}
 
 /* GitHub pill — same height and radius as the CTA */
-.sh-gh-wrap{{display:flex;align-items:center;}}
+.sh-gh-wrap{{display:flex;align-items:center;min-height:2.5rem;}}
 .sh-gh-link{{
-  display:inline-flex;align-items:center;gap:.45rem;box-sizing:border-box;
-  height:2.5rem;padding:0 1rem;
+  display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  box-sizing:border-box;height:2.5rem;padding:0 1rem;line-height:1;
   font-size:.9rem;font-weight:600;color:var(--ink);text-decoration:none;white-space:nowrap;
   border-radius:999px;border:1px solid rgba(42,33,24,.16);
   background:rgba(255,250,235,.9);
@@ -638,7 +674,8 @@ div[role="dialog"]{{
 }}
 .sh-gh-link:hover{{background:rgba(31,61,43,.08);border-color:rgba(31,61,43,.35);color:var(--forest);}}
 .sh-gh-link:focus-visible{{outline:3px solid var(--forest);outline-offset:2px;}}
-.sh-gh-link svg{{flex:0 0 auto;margin:0;}}
+.sh-gh-link svg{{flex:0 0 auto;margin:0;display:block;}}
+.sh-gh-user{{line-height:1;}}
 
 /* LogBook / Home CTA */
 .st-key-top_open_logbook [data-testid="stButton"] button,
@@ -646,18 +683,21 @@ div[role="dialog"]{{
   width:auto;height:2.5rem;min-height:2.5rem;padding:0 1.15rem;border-radius:999px;
   background:var(--forest) !important;
   box-shadow:0 10px 22px -14px rgba(31,61,43,.75);
+  transform:none !important;
 }}
 .st-key-top_open_logbook [data-testid="stButton"] button:hover,
-.st-key-top_back_home    [data-testid="stButton"] button:hover{{background:var(--moss) !important;}}
+.st-key-top_back_home    [data-testid="stButton"] button:hover{{
+  background:var(--moss) !important;transform:none !important;
+}}
 .st-key-top_open_logbook [data-testid="stButton"] button p,
 .st-key-top_back_home    [data-testid="stButton"] button p{{
-  color:#e8f5e2 !important;font-weight:600;font-size:.9rem;white-space:nowrap;
+  color:#e8f5e2 !important;font-weight:600;font-size:.9rem;line-height:1;white-space:nowrap;
 }}
 .st-key-top_open_logbook [data-testid="stButton"] button::after,
 .st-key-top_back_home    [data-testid="stButton"] button::after{{display:none;}}
 
 @media (max-width:640px){{
-  .st-key-top_bar{{top:.5rem;padding:.4rem .4rem .4rem .9rem !important;}}
+  .st-key-top_bar{{top:.5rem;padding:.4rem .45rem .4rem .9rem !important;}}
   .sh-divider,.sh-tagline,.sh-gh-user{{display:none;}}
   .sh-wordmark{{font-size:1.2rem;}}
   .sh-gh-link{{width:2.5rem;padding:0;justify-content:center;}}
