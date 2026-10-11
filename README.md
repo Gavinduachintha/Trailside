@@ -16,7 +16,7 @@ Snap something on the trail. Get field notes. Save the moment in your LogBook.
 
 <br/>
 
-[![GitHub Repo](https://img.shields.io/badge/GitHub-Gavinduachintha%2FLookout-2a2118?style=for-the-badge&logo=github)](https://github.com/Gavinduachintha/Lookout)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Gavinduachintha%Trailside-2a2118?style=for-the-badge&logo=github)](https://github.com/Gavinduachintha/Trailside)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 
 <br/>
@@ -111,8 +111,8 @@ Snap something on the trail. Get field notes. Save the moment in your LogBook.
 <br/>
 
 ```bash
-git clone https://github.com/Gavinduachintha/Lookout.git
-cd Lookout
+git clone https://github.com/Gavinduachintha/Trailside.git
+cd Trailside
 
 python -m venv .venv
 ```
@@ -189,7 +189,7 @@ Your browser opens the app → **Identify** → **Save to LogBook** → you land
 ## 📁 Project layout
 
 ```text
-Lookout/
+Trailside/
 ├── 🍂 app.py              # Streamlit UI · Ollama · LogBook screens
 ├── 📝 prompts.py          # Naturalist system prompt
 ├── config/
