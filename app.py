@@ -11,7 +11,7 @@ from prompts import SYSTEM_PROMPT, build_user_prompt
 from config.db import init_db, save_sighting, fetch_sightings, fetch_image, delete_sighting
 
 MODEL = "gemma3:latest"
-GITHUB_URL  = "https://github.com/Gavinduachintha/Lookout"
+GITHUB_URL  = "https://github.com/Gavinduachintha/Trailside"
 GITHUB_USER = "Gavinduachintha"
 
 # Create table on first run (no-op if it already exists)
